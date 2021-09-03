@@ -167,6 +167,25 @@ public class CreateDriver {
                                 caps));
                 break;
         }
+
+        getEnv = "local";
+        getPlatform = platform;
+        if (browser.equalsIgnoreCase("iphone") ||
+                browser.equalsIgnoreCase("android")) {
+            sessionId.set(((IOSDriver<MobileElement>)
+                    mobileDriver.get()).getSessionId().toString());
+            sessionId.set(((AndroidDriver<MobileElement>)
+                    mobileDriver.get()).getSessionId().toString());
+            sessionBrowser.set(browser);
+            sessionVersion.set(caps.getCapability("deviceName").toString());
+            sessionPlatform.set(getPlatform);
+        } else {
+            sessionId.set(((RemoteWebDriver) webDriver.get())
+                    .getSessionId().toString());
+            sessionBrowser.set(caps.getBrowserName());
+            sessionVersion.set(caps.getVersion());
+            sessionPlatform.set(getPlatform);
+        }
     }
 
     /**
