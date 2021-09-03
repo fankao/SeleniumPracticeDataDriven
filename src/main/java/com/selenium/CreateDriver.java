@@ -86,6 +86,11 @@ public class CreateDriver {
                 ffProfile.setPreference("browser.autofocus", true);
                 caps.setCapability(FirefoxDriver.PROFILE, ffProfile);
                 caps.setCapability("marionette", true);
+                System.setProperty("webdriver.gecko.driver",
+                        "gecko_driver_windows_path/geckodriver.exe");
+                if ( optPreferences.length > 0 ) {
+                    processFFProfile(ffProfile, optPreferences);
+                }
                 webDriver.set(new FirefoxDriver(ffOpts.merge(caps)));
                 break;
             case "chrome":
@@ -104,6 +109,11 @@ public class CreateDriver {
                         chOptions);
                 caps.setCapability("applicationCacheEnabled",
                         false);
+                System.setProperty("webdriver.chrome.driver",
+                        "chrome_driver_windows_path/chromedriver.exe");
+                if ( optPreferences.length > 0 ) {
+                    processCHOptions(chOptions, optPreferences);
+                }
                 webDriver.set(new ChromeDriver(chOptions.merge(caps)));
                 break;
             case "internet explorer":
@@ -114,6 +124,11 @@ public class CreateDriver {
                 ieOpts.merge(caps);
                 caps.setCapability("requireWindowFocus",
                         true);
+                System.setProperty("webdriver.ie.driver",
+                        "ie_driver_windows_path/IEDriverServer.exe");
+                if ( optPreferences.length > 0 ) {
+                    processDesiredCaps(caps, optPreferences);
+                }
                 webDriver.set(new InternetExplorerDriver(
                         ieOpts.merge(caps)));
                 break;
@@ -186,6 +201,15 @@ public class CreateDriver {
             sessionVersion.set(caps.getVersion());
             sessionPlatform.set(getPlatform);
         }
+    }
+
+    private void processDesiredCaps(DesiredCapabilities caps, Map<String, Object>[] optPreferences) {
+    }
+
+    private void processCHOptions(ChromeOptions chOptions, Map<String, Object>[] optPreferences) {
+    }
+
+    private void processFFProfile(FirefoxProfile ffProfile, Map<String, Object>[] optPreferences) {
     }
 
     /**
