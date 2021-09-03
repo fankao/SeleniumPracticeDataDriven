@@ -6,15 +6,22 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateDriver {
@@ -74,24 +81,61 @@ public class CreateDriver {
         switch (browser) {
             case "firefox":
                 caps = DesiredCapabilities.firefox();
-                webDriver.set(new FirefoxDriver(caps));
+                FirefoxOptions ffOpts = new FirefoxOptions();
+                FirefoxProfile ffProfile = new FirefoxProfile();
+                ffProfile.setPreference("browser.autofocus", true);
+                caps.setCapability(FirefoxDriver.PROFILE, ffProfile);
+                caps.setCapability("marionette", true);
+                webDriver.set(new FirefoxDriver(ffOpts.merge(caps)));
                 break;
             case "chrome":
                 caps = DesiredCapabilities.chrome();
-                webDriver.set(new ChromeDriver(caps));
+                ChromeOptions chOptions = new ChromeOptions();
+                Map<String, Object> chromePrefs =
+                        new HashMap<String, Object>();
+                chromePrefs.put("credentials_enable_service",
+                        false);
+                chOptions.setExperimentalOption("prefs",
+                        chromePrefs);
+                chOptions.addArguments("--disable-plugins",
+                        "--disable-extensions",
+                        "--disable-popup-blocking");
+                caps.setCapability(ChromeOptions.CAPABILITY,
+                        chOptions);
+                caps.setCapability("applicationCacheEnabled",
+                        false);
+                webDriver.set(new ChromeDriver(chOptions.merge(caps)));
                 break;
             case "internet explorer":
                 caps = DesiredCapabilities.internetExplorer();
-                webDriver.set(new
-                        InternetExplorerDriver(caps));
+                InternetExplorerOptions ieOpts =
+                        new InternetExplorerOptions();
+                ieOpts.requireWindowFocus();
+                ieOpts.merge(caps);
+                caps.setCapability("requireWindowFocus",
+                        true);
+                webDriver.set(new InternetExplorerDriver(
+                        ieOpts.merge(caps)));
                 break;
             case "safari":
                 caps = DesiredCapabilities.safari();
-                webDriver.set(new SafariDriver(caps));
+                SafariOptions safariOpts = new SafariOptions();
+                safariOpts.setUseCleanSession(true);
+                caps.setCapability(SafariOptions.CAPABILITY,
+                        safariOpts);
+                caps.setCapability("autoAcceptAlerts",
+                        true);
+                webDriver.set(new SafariDriver(safariOpts.merge(caps)));
                 break;
             case "microsoftedge":
                 caps = DesiredCapabilities.edge();
-                webDriver.set(new EdgeDriver(caps));
+                EdgeOptions edgeOpts = new EdgeOptions();
+                edgeOpts.setPageLoadStrategy("normal");
+                caps.setCapability(EdgeOptions.CAPABILITY,
+                        edgeOpts);
+                caps.setCapability("requireWindowFocus",
+                        true);
+                webDriver.set(new EdgeDriver(edgeOpts.merge(caps)));
                 break;
             case "iphone":
             case "ipad":
