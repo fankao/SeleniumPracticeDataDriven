@@ -144,14 +144,27 @@ public class CreateDriver {
                 } else {
                     caps = DesiredCapabilities.iphone();
                 }
-                mobileDriver.set(new IOSDriver<MobileElement>(
-                        new URL(localHub), caps));
+                caps.setCapability("appName",
+                        "https://myapp.com/myApp.zip");
+                caps.setCapability("udid",
+                        "12345678"); // physical device
+                caps.setCapability("device",
+                        "iPhone"); // or iPad
+                mobileDriver.set(new IOSDriver<MobileElement>
+                        (new URL("http://127.0.0.1:4723/wd/hub"),
+                                caps));
                 break;
             case "android":
                 caps = DesiredCapabilities.android();
-                mobileDriver.set(new
-                        AndroidDriver<MobileElement>(
-                        new URL(localHub), caps));
+                caps.setCapability("appName",
+                        "https://myapp.com/myApp.apk");
+                caps.setCapability("udid",
+                        "12345678"); // physical device
+                caps.setCapability("device",
+                        "Android");
+                mobileDriver.set(new AndroidDriver<MobileElement>
+                        (new URL("http://127.0.0.1:4723/wd/hub"),
+                                caps));
                 break;
         }
     }
